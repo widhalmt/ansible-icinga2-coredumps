@@ -1,0 +1,38 @@
+---
+- name: create override directory for icinga 2 service
+  file:
+    state: directory
+    path: /etc/systemd/system/icinga2.service.d
+    owner: root
+    group: root
+    mode: 755
+  when: coredumps != "absent"
+- name: set core dump file size to infinity
+  ini_file:
+    path: /etc/systemd/system/icinga2.service.d/override.conf
+    owner: root
+    group: root
+    mode: 0644
+    section: Service
+    option: LimitCore
+    value: infinity
+    state: "{{ coredumps | default('present') }}"
+  notify:
+    - reload systemd
+    - restart icinga2
+- name: make suid core dumps permanent
+  lineinfile:
+    path: /etc/sysctl.conf
+    regexp: '^fs.suid_dumpable'
+    line: 'fs.suid_dumpable = 1'
+    state: "{{ coredumps | default('present') }}"
+  notify:
+    - reload sysctl
+- name: set location for coredumps
+  lineinfile:
+    path: /etc/sysctl.conf
+    regexp: '^kernel.core_pattern'
+    line: 'kernel.core_pattern=/var/lib/cores/core.%e.%p'
+    state: "{{ coredumps | default('present') }}"
+  notify:
+    - reload sysctl

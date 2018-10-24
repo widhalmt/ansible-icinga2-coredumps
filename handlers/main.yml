@@ -1,0 +1,13 @@
+---
+- name: reload systemd
+  shell: systemctl daemon-reload
+- name: restart icinga2
+  service:
+    name: icinga2
+    state: restarted
+- name: reload icinga2
+  service:
+    name: icinga2
+    state: reloaded
+- name: reload sysctl
+  shell: sysctl --system

@@ -1,0 +1,15 @@
+---
+# deciding which system to use is not based on defaults of the OS
+# it's based on what icinga 2 uses per default on supported OS'es
+- import_tasks: systemd.yml
+  when: ( ansible_distribution == "CentOS" and ansible_distribution_major_version == "7" ) or ( ansible_distribution == "Debian" and ansible_distribution_major_version == "9" )
+- import_tasks: sysv.yml
+  when: ansible_distribution == "CentOS" and ansible_distribution_major_version == "6"
+- name: create directory for coredumps
+  file:
+    path: /var/lib/cores
+    owner: root
+    group: root
+    mode: 1777
+    state: directory
+  when: coredumps != "absent"

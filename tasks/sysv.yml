@@ -1,0 +1,11 @@
+---
+- name: set ulimit for icinga 2 coredumps
+  lineinfile:
+    path: /etc/init.d/icinga2
+    regexp: '^ulimit'
+    line: 'ulimit -c unlimited'
+    insertbefore: '^# Load extra environment variables'
+    state: "{{ coredumps | default('present') }}"
+  notify:
+    - restart icinga2
+
