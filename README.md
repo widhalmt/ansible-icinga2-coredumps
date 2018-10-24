@@ -28,7 +28,7 @@ Let's call it `icinga2-coredumps.yml`
 ```
 ---
 - hosts: all
-  remote_user: widhalmt
+  remote_user: yourusername
   become: yes
   roles:
     - ansible-icinga2-coredumps
@@ -42,6 +42,8 @@ On your Icinga 2 config master you can use the following lines to create a host 
 ```
 # echo '[icingahosts]' > production
 # icinga2 object list --type host | grep " name " | cut -d\" -f2 >> production
+
+```
 
 Run the playbook
 ----------------
