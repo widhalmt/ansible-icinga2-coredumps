@@ -20,19 +20,3 @@
   notify:
     - reload systemd
     - restart icinga2
-- name: make suid core dumps permanent
-  lineinfile:
-    path: /etc/sysctl.conf
-    regexp: '^fs.suid_dumpable'
-    line: 'fs.suid_dumpable = 1'
-    state: "{{ coredumps | default('present') }}"
-  notify:
-    - reload sysctl
-- name: set location for coredumps
-  lineinfile:
-    path: /etc/sysctl.conf
-    regexp: '^kernel.core_pattern'
-    line: 'kernel.core_pattern=/var/lib/cores/core.%e.%p'
-    state: "{{ coredumps | default('present') }}"
-  notify:
-    - reload sysctl
