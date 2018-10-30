@@ -26,6 +26,6 @@
     path: /var/lib/cores
     owner: root
     group: root
-    mode: 1777
+    mode: 01777
     state: directory
   when: coredumps != "absent"
