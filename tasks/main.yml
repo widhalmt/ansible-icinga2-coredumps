@@ -13,12 +13,17 @@
     state: "{{ coredumps | default('present') }}"
   notify:
     - reload sysctl
+- name: check for presence of core dump configuration
+  stat:
+    path: /usr/lib/sysctl.d/50-coredump.conf
+  register: coredump_configuration
 - name: set location for coredumps
   lineinfile:
     path: /etc/sysctl.conf
     regexp: '^kernel.core_pattern'
     line: 'kernel.core_pattern=/var/lib/cores/core.%e.%p'
     state: "{{ coredumps | default('present') }}"
+  when: coredump_configuration.stat.exists == False
   notify:
     - reload sysctl
 - name: create directory for coredumps
@@ -28,4 +33,4 @@
     group: root
     mode: 01777
     state: directory
-  when: coredumps != "absent"
+  when: coredumps != "absent" and coredump_configuration.stat.exists == False
