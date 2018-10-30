@@ -9,7 +9,7 @@
   lineinfile:
     path: /etc/sysctl.conf
     regexp: '^fs.suid_dumpable'
-    line: 'fs.suid_dumpable = 1'
+    line: 'fs.suid_dumpable = 2'
     state: "{{ coredumps | default('present') }}"
   notify:
     - reload sysctl
